@@ -1,0 +1,79 @@
+[bar]
+name = "lemonbar"
+blocks = "launcher ram disk cpu | | date time volume desktop"
+height = 24
+underline = true
+areas = 18
+font = "Terminess Nerd Font Propo"
+
+[default]
+margin = 4
+padding = 2
+foreground = "#DEEDFC"
+background = "#26291A"
+label-foreground = "#152544"
+
+[desktop]
+command = "bspc query -D -d focused --names"
+trigger = "bspc subscribe"
+label = "  "
+label-background = "#825CAD"
+label-foreground = "#EFEFEF"
+mouse-left = sh ~/.config/rofi/powermenu/powermenu.sh
+margin-right = 6
+
+[volume]
+command = "sh ~/.config/succade/bar_func.sh -v --get-volume"
+label = "  "
+interval = 0
+label-background = "#A171D6"
+label-foreground = "#EFEFEF"
+mouse-left = alacritty -e pulsemixer
+mouse-middle = sh ~/.config/succade/bar_func.sh -v --mute-toggle
+scroll-down = pactl set-sink-volume @DEFAULT_SINK@ -1% 
+scroll-up = pactl set-sink-volume @DEFAULT_SINK@ +1%
+
+[date]
+command = "date +'%Y/%m/%d'"
+interval = 5
+label = "  "
+label-background = "#D584E7"
+label-foreground = "#EFEFEF"
+
+[time]
+command = "date +'%l:%M %p'"
+interval = 1
+label = "  "
+label-background = "#B973C9"
+label-foreground = "#EFEFEF"
+mouse-left = xclock
+
+[disk]
+command = "sh ~/.config/succade/bar_func.sh -du"
+interval = 10
+label = "  "
+label-background = "#B973C9"
+label-foreground = "#EFEFEF"
+
+[cpu]
+command = "sh ~/.config/succade/bar_func.sh -cu"
+interval = 5
+label = "  "
+label-background = "#D584E7"
+label-foreground = "#EFEFEF"
+
+[ram]
+command = "sh ~/.config/succade/bar_func.sh -ru"
+interval = 10
+label = "  "
+label-background = "#A171D6"
+label-foreground = "#EFEFEF"
+
+[launcher]
+command = "echo $(pacman -Q | wc -l)"
+label = "  "
+interval = 5
+mouse-left = "rofi -show run"
+label-background = "#825CAD"
+label-foreground = "#EFEFEF"
+margin-left = 6
