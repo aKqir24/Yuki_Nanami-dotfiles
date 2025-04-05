@@ -133,20 +133,20 @@ disk_usage_size() {
 }
 
 # Optimized CPU Usage (using /proc/stat)
+
 cpu_usage() {
-    # Get current CPU stats from /proc/stat
-    read user nice system idle iowait irq softirq steal guest guest_nice < /proc/stat
-    total=$((user + nice + system + idle + iowait + irq + softirq + steal))
-    idle_and_iowait=$((idle + iowait))
-
-    # Calculate CPU usage percentage
-    cpu_usage_percentage=$((100 * (total - idle_and_iowait) / total))
-
-    # Output the CPU usage percentage
-    if [[ $cpu_usage_percentage == ${cpu_usage_percentage%.*} ]]; then
-        echo "$cpu_usage_percentage%"
+    # Get the CPU usage from the top command, parsing the output
+    cpu_usage=$(top -bn1 | grep "Cpu(s)" | sed "s/.*, *\([0-9.]*\)%* id.*/\1/" | awk '{print 100 - $1}')
+    
+    # Round the value and check if it's an integer
+    rounded_cpu_usage=$(printf "%.0f" $cpu_usage)
+    
+    if [[ "$cpu_usage" == "$rounded_cpu_usage" ]]; then
+        # If the rounded value matches the original, print without decimals
+        printf "%d%%\n" $rounded_cpu_usage
     else
-        echo "$(printf "%.2f" $cpu_usage_percentage)%"
+        # Otherwise, print with two decimal places
+        printf "%.2f%%\n" $cpu_usage
     fi
 }
 
